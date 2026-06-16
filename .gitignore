@@ -1,0 +1,45 @@
+# temp folder
+tmp
+app/tmp
+
+# Frontend asset
+app/web/dist
+
+# Build artifacts
+build/
+bin/
+memos
+app/build/
+app/bin/
+app/memos
+
+.DS_Store
+
+# Jetbrains
+.idea
+
+# Docker Compose Environment File
+.env
+app/.env
+
+dist
+app/dist
+
+# VSCode settings
+.vscode
+
+# Git worktrees
+.worktrees/
+
+# Local pnpm store (project-scoped, created when --config.store-dir is set
+# without an existing store; contains a symlink back to the workspace).
+.pnpm-store/
+app/.pnpm-store/
+
+# Frontend test coverage output (Vitest + @vitest/coverage-v8).
+app/web/coverage/
+
+# Database files generated during local execution
+app/memos_prod.db
+app/memos_prod.db-shm
+app/memos_prod.db-wal
