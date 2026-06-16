@@ -1,0 +1,7 @@
+services:
+  backend:
+      build: .
+      ports:
+        - "8081:8081"
+      volumes:
+        - ./memos_data:/var/opt/memos
