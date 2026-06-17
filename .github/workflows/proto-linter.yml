@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [main]
     paths:
-      - "proto/**"
+      - "app/proto/**"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

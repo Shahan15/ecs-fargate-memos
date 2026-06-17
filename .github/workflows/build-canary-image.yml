@@ -24,7 +24,7 @@ jobs:
         with:
           node-version: "24"
           cache: pnpm
-          cache-dependency-path: "web/pnpm-lock.yaml"
+          cache-dependency-path: "app/web/pnpm-lock.yaml"
       - name: Get pnpm store directory
         id: pnpm-cache
         shell: bash
@@ -36,16 +36,16 @@ jobs:
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('web/pnpm-lock.yaml') }}
           restore-keys: ${{ runner.os }}-pnpm-store-
       - run: pnpm install --frozen-lockfile
-        working-directory: web
+        working-directory: app/web
       - name: Run frontend build
         run: pnpm release
-        working-directory: web
+        working-directory: app/web
 
       - name: Upload frontend artifacts
         uses: actions/upload-artifact@v6
         with:
           name: frontend-dist
-          path: server/router/frontend/dist
+          path: app/server/router/frontend/dist
           retention-days: 1
 
   build-push:
@@ -67,7 +67,7 @@ jobs:
         uses: actions/download-artifact@v7
         with:
           name: frontend-dist
-          path: server/router/frontend/dist
+          path: app/server/router/frontend/dist
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3

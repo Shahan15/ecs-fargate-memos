@@ -1,11 +1,11 @@
 FROM --platform=$BUILDPLATFORM golang:1.26.2-alpine AS backend
-WORKDIR /backend-build
+WORKDIR /app/backend-build
 
 # Install build dependencies
 RUN apk add --no-cache git ca-certificates
 
 # Copy go mod files and download dependencies (cached layer)
-COPY go.mod go.sum ./
+COPY app/go.mod app/go.sum ./
 RUN --mount=type=cache,target=/go/pkg/mod \
     go mod download
 
@@ -23,7 +23,7 @@ RUN --mount=type=cache,target=/go/pkg/mod \
       -ldflags="-s -w -X github.com/usememos/memos/internal/version.Version=${VERSION} -X github.com/usememos/memos/internal/version.Commit=${COMMIT} -extldflags '-static'" \
       -tags netgo,osusergo \
       -o memos \
-      ./cmd/memos
+      ./app/cmd/memos
 
 # Use minimal Alpine with security updates
 FROM alpine:3.21 AS monolithic
@@ -36,8 +36,8 @@ RUN apk add --no-cache tzdata ca-certificates su-exec && \
     chown -R nonroot:nonroot /var/opt/memos
 
 # Copy binary and entrypoint to /usr/local/memos
-COPY --from=backend /backend-build/memos /usr/local/memos/memos
-COPY --from=backend --chmod=755 /backend-build/scripts/entrypoint.sh /usr/local/memos/entrypoint.sh
+COPY --from=backend /app/backend-build/memos /usr/local/memos/memos
+COPY --from=backend --chmod=755 /app/backend-build/app/scripts/entrypoint.sh /usr/local/memos/entrypoint.sh
 
 # Run as root to fix permissions, entrypoint will drop to nonroot
 USER root
