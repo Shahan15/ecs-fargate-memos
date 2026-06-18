@@ -11,3 +11,4 @@ memos
 .dockerignore
 docs/
 .DS_Store
+**/*_test.go
