@@ -2,6 +2,7 @@ services:
   memos:
     image: 446276073026.dkr.ecr.eu-west-1.amazonaws.com/memos-ecs:latest
     build: .
+    platform: 'linux/amd64'
     ports:
       - "8081:8081"
     volumes:
