@@ -3,17 +3,11 @@ output "vpc_id" {
   description = "The ID of memos-VPC"
 }
 
-output "private_subnet_A_id" {
-  value = aws_subnet.memos-private-subnet-A.id
-  description = "The ID of private subnet A"
+output "private_subnets_id" {
+  value = [aws_subnet.memos-private-subnet-A.id,aws_subnet.memos-private-subnet-B.id]
 }
 
-output "private_subnet_B_id" {
-  value = aws_subnet.memos-private-subnet-B.id
-  description = "The ID of private subnet B"
-}
-
-output "public_subnets" {
+output "public_subnets_id" {
   value = [aws_subnet.memos-public-subnet-A.id,aws_subnet.memos-public-subnet-B.id]
 }
 

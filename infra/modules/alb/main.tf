@@ -1,7 +1,57 @@
 resource "aws_lb" "memos_ALB" {
-  name               = "memos_ALB"
+  name               = "memos-ALB"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [var.security_group_id]
-  subnets            = var.subnets_for_alb
+  subnets            = var.public_subnets_id
+}
+
+resource "aws_lb_target_group" "ecs-cluster-tg" {
+  name     = "ecs-cluster-tg"
+  port     = 8081
+  protocol = "HTTP"
+  vpc_id   = var.vpc_id
+  target_type = "ip"
+}
+
+resource "aws_vpc" "main" {
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "aws_lb_listener" "http_redirect" {
+  load_balancer_arn = aws_lb.memos_ALB.arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type            = "redirect"
+    redirect {
+      port = "443"
+      protocol = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+}
+
+resource "aws_lb_listener" "back_end" {
+  load_balancer_arn = aws_lb.memos_ALB.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = var.acm-arn
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.ecs-cluster-tg.arn
+  }
+}
+
+
+
+#ROUTE 53
+resource "aws_route53_record" "route53_alb_redirect" {
+  zone_id = aws_route53_zone.primary.zone_id
+  name    = "Application Load Balancer"
+  type    = "A"
+  records = [aws_eip.lb.public_ip]
 }

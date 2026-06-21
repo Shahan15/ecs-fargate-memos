@@ -32,9 +32,30 @@ variable "vpc_region" {
 
 ##################################################################
 
-#ALB VARIABLES
+#ACM
+variable "domain_name" {
+  type = string
+  description = "Domain Name"
+}
 
-variable "subnets_for_alb" {
-  type = list(string)
-  description = "value"
+#ECS
+variable "application-image-uri" {
+  type = string
+  description = "URL of image hosted in ECR"
+}
+
+variable "taskExecutionARN" {
+  type = string
+  description = "ARN of the IAM User with Task Execution policy permissions"
+}
+
+#Ports
+variable "container_port" {
+  type = string
+  description = "Port Container is running on"
+}
+
+variable "host_port" {
+  type = string
+  description = "Port that is visible to outside of the docker container, for Fargate Container Port = Host Port "
 }
