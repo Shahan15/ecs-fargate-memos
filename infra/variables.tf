@@ -32,14 +32,6 @@ variable "vpc_region" {
 
 ##################################################################
 
-#SG VARIABLES
-variable "vpc_id_sg" {
-  type = string
-  description = "This is the ID of the VPC we are attaching this SG to "
-}
-
-##################################################################
-
 #ALB VARIABLES
 
 variable "subnets_for_alb" {

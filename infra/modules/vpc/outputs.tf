@@ -13,14 +13,8 @@ output "private_subnet_B_id" {
   description = "The ID of private subnet B"
 }
 
-output "public_subnet_A_id" {
-  value = aws_subnet.memos-public-subnet-A.id
-  description = "The ID of private subnet A"
-}
-
-output "public_subnet_B_id" {
-  value = aws_subnet.memos-public-subnet-B.id
-  description = "The ID of private subnet B"
+output "public_subnets" {
+  value = [aws_subnet.memos-public-subnet-A.id,aws_subnet.memos-public-subnet-B.id]
 }
 
 output "internet_gateway_id" {

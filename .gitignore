@@ -19,8 +19,8 @@ app/memos_data
 .idea
 
 #infra
-./terraform
-infra/variables.tfvars
+infra/.terraform/
+infra/terraform.tfvars
 
 # Docker Compose Environment File
 .env
