@@ -18,9 +18,9 @@ variable "private_subnets" {
   description = "Private Subnets"
 }
 
-variable "security_group" {
+variable "memos_ecs_tasks_sg" {
   type = string
-  description = "Security Group ID"
+  description = "Security Group ID for ECS SG - to only allow traffic from the ALB"
 }
 
 variable "container_port" {

@@ -32,8 +32,14 @@ module "ecs" {
   application-image-uri = var.application-image-uri
   taskExecutionARN = var.taskExecutionARN
   target_group_arn = module.alb.target_group_arn
-  security_group = module.security_group.sg_id
+  memos_ecs_tasks_sg = module.security_group.memos_ecs_tasks_sg_id
   private_subnets = module.vpc.private_subnets_id
   container_port = var.container_port
   host_port = var.host_port
+}
+
+module "route53" {
+  source = "./modules/route53"
+  alb_zone_id = module.alb.alb_zone_id
+  alb_dns_name = module.alb.alb_dns_name
 }

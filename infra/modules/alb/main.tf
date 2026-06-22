@@ -45,13 +45,3 @@ resource "aws_lb_listener" "back_end" {
     target_group_arn = aws_lb_target_group.ecs-cluster-tg.arn
   }
 }
-
-
-
-#ROUTE 53
-resource "aws_route53_record" "route53_alb_redirect" {
-  zone_id = aws_route53_zone.primary.zone_id
-  name    = "Application Load Balancer"
-  type    = "A"
-  records = [aws_eip.lb.public_ip]
-}
