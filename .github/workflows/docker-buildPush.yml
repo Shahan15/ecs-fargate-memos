@@ -1,6 +1,10 @@
 name: Docker-Build-And-Push-Image
 on: [push]
 
+permissions:
+  id-token: write   # Mandatory for the OIDC handshake
+  contents: read
+
 jobs:
   Build:
     runs-on: ubuntu-latest
