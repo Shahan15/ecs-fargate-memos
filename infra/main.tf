@@ -3,12 +3,6 @@ data "aws_acm_certificate" "memos-acm" {
   statuses = ["ISSUED"]
 }
 
-# resource "github_actions_variable" "github_oidc_variable" {
-#   repository       = "ecs-fargate-memos"
-#   variable_name    = "OIDC_GITHUB_ARN"
-#   value            = module.iam.github_oidc_role_arn
-# }
-
 module "vpc" {
   source = "./modules/vpc"
   vpc_region = var.vpc_region

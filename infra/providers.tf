@@ -22,7 +22,3 @@ terraform {
 provider "aws" {
   region = "eu-west-1"
 }
-
-# provider "github" {
-#   owner = var.organistaion_name
-# }
