@@ -1,8 +1,10 @@
 #Stage 1: FrontEnd 
 FROM node:24-alpine AS frontend
 WORKDIR /app/web
+COPY app/web/package.json app/web/pnpm-lock.yaml ./
+RUN npm install -g pnpm && pnpm install
 COPY app/web .
-RUN npm install -g pnpm && pnpm install && pnpm release
+RUN pnpm release
 
 
 #Stage 2: Backend

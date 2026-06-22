@@ -26,6 +26,12 @@ jobs:
 
       # Build image and push image to ECR
       - name: Build and push docker image
-        run: |
-          docker build --platform linux/amd64 -t ${{ steps.login-ecr.outputs.registry }}/memos-ecs:latest .
-          docker push ${{ steps.login-ecr.outputs.registry }}/memos-ecs:latest
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          #ECT Address
+          tags: ${{ steps.login-ecr.outputs.registry }}/memos-ecs:latest
+          # enable the caching - so we dont constantly build images and push to ECR regardless if there has been change or not
+          cache-from: type=gha 
+          cache-to: type=gha,mode=max
