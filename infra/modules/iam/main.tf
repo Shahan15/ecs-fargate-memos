@@ -66,3 +66,58 @@ resource "aws_iam_role_policy_attachment" "github_oidc_role" {
   role       = aws_iam_role.github_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser"
 }
+
+
+# Policy defining access to Terraform state bucket
+resource "aws_iam_policy" "github_s3_state_policy" {
+  name        = "github-actions-s3-state-policy"
+  description = "Allows GitHub Actions to read and write state files in the memos S3 bucket"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:ListBucket",
+          "s3:GetBucketLocation"
+        ]
+        Resource = "arn:aws:s3:::shahan-memos-tf-state-bucket"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:DeleteObject"
+        ]
+        Resource = "arn:aws:s3:::shahan-memos-tf-state-bucket/*"
+      }
+    ]
+  })
+}
+
+# Connects S3 state policy to GitHub execution role
+resource "aws_iam_role_policy_attachment" "github_s3_state_attach" {
+  role       = aws_iam_role.github_execution_role.name
+  policy_arn = aws_iam_policy.github_s3_state_policy.arn
+}
+
+
+# Grouping the required managed policies for infrastructure
+locals {
+  github_policies = [
+    "arn:aws:iam::aws:policy/AmazonVPCFullAccess",
+    "arn:aws:iam::aws:policy/AmazonECS_FullAccess",
+    "arn:aws:iam::aws:policy/AmazonRoute53FullAccess",
+    "arn:aws:iam::aws:policy/AWSCertificateManagerFullAccess",
+    "arn:aws:iam::aws:policy/IAMFullAccess",
+    "arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess" #
+  ]
+}
+
+resource "aws_iam_role_policy_attachment" "github_services_attach" {
+  for_each   = toset(local.github_policies)
+  role       = aws_iam_role.github_execution_role.name
+  policy_arn = each.value
+}

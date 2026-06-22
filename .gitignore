@@ -17,7 +17,8 @@ app/memos_data
 .idea
 
 #infra
-infra/.terraform/
+infra/.terraform
+infra-prereq/.terraform
 infra/terraform.tfvars
 # .tfstate files
 *.tfstate

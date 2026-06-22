@@ -1,0 +1,51 @@
+name: Terraform Deploy
+on: [push]
+
+permissions:
+  id-token: write # Mandatory for the OIDC handshake
+  contents: read
+  actions: write
+
+defaults:
+  run:
+    working-directory: ./infra
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Create terraform.tfvars file
+        run:
+          echo "${{ secrets.TFVARS_BASE64 }}" | base64 --decode > terraform.tfvars
+
+          # Authenticate AWS CLI using OIDC
+      - name: Authenticate AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::446276073026:role/github-actions-ecr-role
+          aws-region: eu-west-1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform validate
+        run: terraform validate
+
+      - name: Terraform plan
+        run: terraform plan
+        if: success()
+        # env:
+        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Terraform apply
+        if: success()
+        run: terraform apply -auto-approve
+        # env:
+        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
