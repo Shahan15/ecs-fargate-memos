@@ -3,11 +3,6 @@ variable "application-image-uri" {
   description = "The URL of the image hosted in ECR"
 }
 
-variable "taskExecutionARN" {
-  type = string
-  description = "ARN of the IAM User with Task Execution policy permissions"
-}
-
 variable "target_group_arn" {
   type = string
   description = "Load Balancer ARN"

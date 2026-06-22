@@ -30,7 +30,6 @@ module "security_group" {
 module "ecs" {
   source = "./modules/ecs"
   application-image-uri = var.application-image-uri
-  taskExecutionARN = var.taskExecutionARN
   target_group_arn = module.alb.target_group_arn
   memos_ecs_tasks_sg = module.security_group.memos_ecs_tasks_sg_id
   private_subnets = module.vpc.private_subnets_id

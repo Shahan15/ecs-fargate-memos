@@ -4,7 +4,6 @@ resource "aws_ecs_cluster" "memos-ecs-cluster" {
 
 resource "aws_ecs_task_definition" "memos-task-definition" {
   family                   = "memos-task-definition"
-  
   execution_role_arn       = aws_iam_role.ecs_execution_role.arn
   
   requires_compatibilities = ["FARGATE"]
@@ -35,6 +34,7 @@ TASK_DEFINITION
  }
 }
 
+#ECS Requires a service role to execute commands on your behalf
 resource "aws_iam_role" "ecs_execution_role" {
   name = "memos-ecs-execution-role-clean"
 
@@ -51,6 +51,7 @@ resource "aws_iam_role" "ecs_execution_role" {
     ]
   })
 }
+
 resource "aws_iam_role_policy_attachment" "ecs_execution_attach" {
   role       = aws_iam_role.ecs_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
@@ -74,5 +75,4 @@ resource "aws_ecs_service" "memos-ecs-service" {
     container_name   = "memos-container-definition"
     container_port   = var.container_port
   }
-  
 }

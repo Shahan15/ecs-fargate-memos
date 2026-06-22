@@ -44,11 +44,6 @@ variable "application-image-uri" {
   description = "URL of image hosted in ECR"
 }
 
-variable "taskExecutionARN" {
-  type = string
-  description = "ARN of the IAM User with Task Execution policy permissions"
-}
-
 #Ports
 variable "container_port" {
   type = string

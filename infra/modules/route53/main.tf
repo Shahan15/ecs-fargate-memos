@@ -1,9 +1,9 @@
 resource "aws_route53_zone" "hosted_zone" {
-  name = "shahankhan.co.uk"
+  name = "memos.shahankhan.co.uk"
 }
 
 resource "aws_route53_record" "route53_alias_record" {
-  name            = "memos.${aws_route53_zone.hosted_zone.name}"
+  name            = aws_route53_zone.hosted_zone.name
   zone_id         = aws_route53_zone.hosted_zone.zone_id
   type            = "A"
   
