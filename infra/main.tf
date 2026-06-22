@@ -3,6 +3,12 @@ data "aws_acm_certificate" "memos-acm" {
   statuses = ["ISSUED"]
 }
 
+resource "github_actions_variable" "github_oidc_variable" {
+  repository       = "ecs-fargate-memos"
+  variable_name    = "OIDC_GITHUB_ARN"
+  value            = module.iam.github_oidc_role_arn
+}
+
 module "vpc" {
   source = "./modules/vpc"
   vpc_region = var.vpc_region
@@ -27,6 +33,10 @@ module "security_group" {
     vpc_id_sg = module.vpc.vpc_id
 }
 
+module "iam" {
+  source = "./modules/iam"
+}
+
 module "ecs" {
   source = "./modules/ecs"
   application-image-uri = var.application-image-uri
@@ -35,6 +45,7 @@ module "ecs" {
   private_subnets = module.vpc.private_subnets_id
   container_port = var.container_port
   host_port = var.host_port
+  ecs_execution_role_arn = module.iam.execution_role_arn
 }
 
 module "route53" {

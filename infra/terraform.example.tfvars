@@ -15,3 +15,8 @@ application-image-uri  = ""
 container_port = 
 #Port of the host - this will be the same as Container-port if launch type = fargate
 host_port = 
+
+
+#GITHUB
+repository = ""
+organistaion_name = ""

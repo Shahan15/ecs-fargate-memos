@@ -27,3 +27,8 @@ variable "host_port" {
   type = string
   description = "Port that is visible to outside of the docker container, for Fargate Container Port = Host Port "
 }
+
+variable "ecs_execution_role_arn" {
+  type = string
+  description = "Execution Role ARN Value"
+}
