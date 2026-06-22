@@ -11,15 +11,15 @@ WORKDIR /app
 RUN apk add --no-cache git ca-certificates
 COPY app/go.mod app/go.sum ./
 RUN go mod download 
-COPY /app .
-COPY --from=frontend app/server/router/frontend/dist  ./server/router/frontend/dist
+COPY app/ .
+COPY --from=frontend /app/server/router/frontend/dist  ./server/router/frontend/dist
 RUN --mount=type=cache,target=/root/.cache/go-build \
  CGO_ENABLED=0 go build -o memos ./cmd/memos
 
 #Stage 3: Final Image
 FROM scratch AS runner
 WORKDIR /app
-COPY --from=builder etc/ssl/certs/ca-certificates.crt /etc/ssl/certs
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs
 COPY --from=builder /app/memos .
 EXPOSE 8081
 CMD [ "./memos" ]

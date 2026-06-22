@@ -11,18 +11,21 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-      #authenticate AWS CLI using OIDC perform AWS actions
+
+      # Authenticate AWS CLI using OIDC
       - name: Authenticate AWS
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ vars.OIDC_GITHUB_ARN }}
           aws-region: eu-west-1
-      #Log into ECR
+
+      # Log into ECR
       - name: ECR login
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
-      #Build image and push image to ECR
+
+      # Build image and push image to ECR
       - name: Build and push docker image
         run: |
-          docker build --platform linux/amd64 -t ${{ steps.login-ecr.outputs.registry }}/memos-app:latest .
-          docker push ${{ steps.login-ecr.outputs.registry }}/memos-app:latest
+          docker build --platform linux/amd64 -t ${{ steps.login-ecr.outputs.registry }}/memos-ecs:latest .
+          docker push ${{ steps.login-ecr.outputs.registry }}/memos-ecs:latest

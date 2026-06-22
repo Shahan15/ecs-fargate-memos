@@ -8,10 +8,8 @@ app/web/dist
 # Build artifacts
 build/
 bin/
-memos
 app/build/
 app/bin/
-app/memos
 app/memos_data
 .DS_Store
 

@@ -53,7 +53,7 @@ resource "aws_iam_role" "github_execution_role" {
             "token.actions.githubusercontent.com:aud" : "sts.amazonaws.com"
           },
           "StringLike" : {
-            "token.actions.githubusercontent.com:sub" : "repo:${var.organistaion_name}/${var.repository}"
+            "token.actions.githubusercontent.com:sub" : "repo:${var.organistaion_name}/*"
           }
         }
       }
