@@ -5,7 +5,7 @@ This project delivers a production-grade, end-to-end deployment of a privacy-foc
 ## Overview
 
 Containerisation: Multi-stage builds using `scratch` base image to reduce image size to ~30MB
-Infrastructre as Code (IaC): Terraform manages all infrastructure, fully automated
+Infrastructure as Code (IaC): Terraform manages all infrastructure, fully automated
 Compute: AWS ECS Fargate
 Networking: Custom VPC, Private/Public Subnets Alongside NAT Gateways, Routes, Security Groups, Load Balancing
 TLS/DNS: SSL Certifcation configured via ACM, DNS (Cloudflare)
@@ -78,22 +78,22 @@ docker build -t memos . #To build image
 ![Docker Build Command](assets/docker_Build_LocalSetup.png)
 
 ```
-docker run -p 5230:5230 memos #Start the Container
+docker run -p 8081:8081 memos #Start the Container
 ```
 
 ![Docker Run Command](assets/docker_Run_LocalSetup.png)
 
 You can run a health check via:
-`curl http://localhost:5230/healthCheck`
+`curl http://localhost:8081/healthCheck`
 
 ![Health Check](assets/health_check.png)
 
-Open `http://localhost:5230` and start writing!
+Open `http://localhost:8081` and start writing!
 
 ## Infrastructure
 **Custom VPC:** Consisting of 2 public subnets and 2 Private subnets across 2 AZ's. Ensuring high availability.
 
-**Internet Gateway + NAT Gateway:** Internet gateway enabling bidrectional traffic, with NAT Gateway providing secure outbound access for private subnets.
+**Internet Gateway + NAT Gateway:** Internet gateway enabling bidirectional traffic, with NAT Gateway providing secure outbound access for private subnets.
 
 **Route53:** Provides DNS Resolution for domain `(memos.shahankhan.co.uk)` to ALB via Alias record
 
@@ -103,8 +103,49 @@ Open `http://localhost:5230` and start writing!
 
 **S3 Bucket:** `.tfstate` is stored in secure S3 bucket with native locking enabled. Ensuring idempotency and and prevent concurrent modification by multiple users or processes.
 
+## Security Profile
+- **IAM OIDC Identity Providers:** GitHub Actions workflows communicates with AWS securely using OpenID Connect roles. No permanent AWS credentials or tokens are stored in the repo.
 
+- **Network Isolation:** The application container layer possesses zero public IP addresses. It is locked inside a private subnet layer protected by stateful security groups that only accept incoming inputs on port 8081 stemming exclusively from the ALB's security group ID.
 
+## Setup Order & Prerequisites
+
+Before running the automated deployment pipelines, the backend state storage and GitHub authentication paths must be provisioned manually.
+
+### 1. Bootstrap the S3 Backend (`infra-prereq/`)
+Because Terraform requires an existing S3 bucket to store its state file securely, you must initialize and apply the prerequisites configuration first.
+
+```bash
+cd infra-prereq/
+terraform init
+terraform apply -auto-approve
+```
+### 2. Configure GitHub Secrets
+avigate to your repository on GitHub (Settings > Secrets and variables > Actions) and create the following repository secrets:
+
+| Secret Name | Description | Example / Format |
+| :--- | :--- | :--- |
+| `ACTIONS_GITHUB_ROLE_ARN` | The AWS IAM Role ARN configured with an OIDC trust policy to allow GitHub Actions to authenticate without long-lived keys. | `arn:aws:iam::123456789012:role/github-actions-role` |
+| `TFVARS_BASE64` | A **Base64-encoded** string of your complete `terraform.tfvars` file. This is dynamically decoded by the pipeline at runtime. | *See instructions below* |
+
+### How to generate the `TFVARS_BASE64` secret
+
+To prevent exposing raw sensitive infrastructure variables, populate your local `infra/terraform.tfvars` file first, then convert it to a Base64 string using your terminal:
+
+```bash
+# On macOS / Linux:
+cat infra/terraform.tfvars | base64 | pbcopy  # Copies the encoded string straight to your clipboard
+```
+
+## CI/CD Pipelines
+
+Three decoupled pipelines, each with a single responsibility:
+
+| Pipeline | Trigger | Purpose / Key Steps |
+| :--- | :--- | :--- |
+| **docker-build.yaml** <br>*(Docker-Build-And-Push-Image)* | `workflow_dispatch` <br>(Manual with inputs for cluster, service, & domain) | Authenticates via AWS OIDC, logs into ECR, builds/pushes the Docker image with GHA caching (`:latest`), forces an ECS service deployment update, and runs a post-deploy HTTPS health check against the live domain. |
+| **tf-deploy.yaml** <br>*(Terraform Deploy)* | `workflow_dispatch` <br>(Manual) | Decodes the base64 `tfvars` secret, authenticates via AWS OIDC, initializes HashiCorp Terraform, validates configurations, runs a `terraform plan`, and automatically executes `terraform apply -auto-approve` to provision infra. |
+| **ci.yaml** <br>*(Continuous Integration)* | `push` <br>(Triggers on any code push) | Automatically spins up Node.js v24 inside the `./app/web/tests` working directory, installs npm dependencies, and executes the automated unit/integration test suite (`npm test`). |
 
 
 
