@@ -99,7 +99,7 @@ Open `http://localhost:8081` and start writing!
 
 **Application Load Balancer:** Handles all traffic into VPC on port 80/443. Handles SSL/TLS Termination and redirects HTTP traffic to HTTPS. Provisoned across subnets in AZ's. SSL/TLS Cert handled by AWS ACM. Moving traffic to appropriate target group
 
-**ECS/Fargate:**Serverless container orchestration. Provisoned across multiple AZ's ensuring high avialability.
+**ECS/Fargate:** Serverless container orchestration. Provisoned across multiple AZ's ensuring high avialability.
 
 **S3 Bucket:** `.tfstate` is stored in secure S3 bucket with native locking enabled. Ensuring idempotency and and prevent concurrent modification by multiple users or processes.
 

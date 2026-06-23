@@ -38,7 +38,7 @@ resource "aws_ecs_service" "memos-ecs-service" {
   name            = "memos-ecs-service"
   cluster         = aws_ecs_cluster.memos-ecs-cluster.id
   task_definition = aws_ecs_task_definition.memos-task-definition.arn
-  desired_count   = 2
+  desired_count   = 1
   launch_type     = "FARGATE"
 
   network_configuration {
