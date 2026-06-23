@@ -1,5 +1,6 @@
 name: Docker-Build-And-Push-Image
-on: [push]
+on: 
+    workflow_dispatch:
 
 permissions:
   id-token: write   # Mandatory for the OIDC handshake

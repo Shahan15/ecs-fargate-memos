@@ -1,6 +1,7 @@
 name: Terraform Deploy
-on: [push]
-
+on: 
+    workflow_dispatch:
+        
 permissions:
   id-token: write # Mandatory for the OIDC handshake
   contents: read
