@@ -14,8 +14,7 @@ Registry: Docker image hosted in AWS ECR
 
 ## Demo
 
-
-
+<video src="./assets/demo.mp4" width="750" controls></video>
 
 
 ## Architecture
@@ -45,6 +44,7 @@ memos-infra/
 │       ├── docker-buildPush.yml
 │       ├── terraformDeploy.yml
 │       └── unittests.yml
+|── assets/                 # Media files for README
 ├── app/                    # Memos application source/config
 ├── infra/                  # Terraform infrastructure code
 │   ├── modules/            # Reusable resource modules
@@ -146,8 +146,3 @@ Three decoupled pipelines, each with a single responsibility:
 | **docker-build.yaml** <br>*(Docker-Build-And-Push-Image)* | `workflow_dispatch` <br>(Manual with inputs for cluster, service, & domain) | Authenticates via AWS OIDC, logs into ECR, builds/pushes the Docker image with GHA caching (`:latest`), forces an ECS service deployment update, and runs a post-deploy HTTPS health check against the live domain. |
 | **tf-deploy.yaml** <br>*(Terraform Deploy)* | `workflow_dispatch` <br>(Manual) | Decodes the base64 `tfvars` secret, authenticates via AWS OIDC, initializes HashiCorp Terraform, validates configurations, runs a `terraform plan`, and automatically executes `terraform apply -auto-approve` to provision infra. |
 | **ci.yaml** <br>*(Continuous Integration)* | `push` <br>(Triggers on any code push) | Automatically spins up Node.js v24 inside the `./app/web/tests` working directory, installs npm dependencies, and executes the automated unit/integration test suite (`npm test`). |
-
-
-
-
-
