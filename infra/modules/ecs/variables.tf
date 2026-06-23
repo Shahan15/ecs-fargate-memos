@@ -1,34 +1,34 @@
-variable "application-image-uri" {
+variable "ecr_registry_url" {
   type        = string
   description = "The URL of the image hosted in ECR"
 }
 
 variable "target_group_arn" {
-  type = string
+  type        = string
   description = "Load Balancer ARN"
 }
 
 variable "private_subnets" {
-  type = list(string)
+  type        = list(string)
   description = "Private Subnets"
 }
 
 variable "memos_ecs_tasks_sg" {
-  type = string
+  type        = string
   description = "Security Group ID for ECS SG - to only allow traffic from the ALB"
 }
 
 variable "container_port" {
-  type = string
+  type        = string
   description = "Port Container is running on"
 }
 
 variable "host_port" {
-  type = string
+  type        = string
   description = "Port that is visible to outside of the docker container, for Fargate Container Port = Host Port "
 }
 
 variable "ecs_execution_role_arn" {
-  type = string
+  type        = string
   description = "Execution Role ARN Value"
 }

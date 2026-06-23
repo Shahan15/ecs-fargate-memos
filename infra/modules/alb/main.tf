@@ -7,11 +7,23 @@ resource "aws_lb" "memos_ALB" {
 }
 
 resource "aws_lb_target_group" "ecs-cluster-tg" {
-  name     = "ecs-cluster-tg"
-  port     = 8081
-  protocol = "HTTP"
-  vpc_id   = var.vpc_id
+  name        = "ecs-cluster-tg"
+  port        = 8081
+  protocol    = "HTTP"
+  vpc_id      = var.vpc_id
   target_type = "ip"
+
+  health_check {
+    enabled             = true
+    path                = "/"     
+    port                = "8081" 
+    protocol            = "HTTP"
+    matcher             = "200-399" 
+    interval            = 30       
+    timeout             = 5         
+    healthy_threshold   = 2        
+    unhealthy_threshold = 3         
+  }
 }
 
 resource "aws_vpc" "main" {
@@ -24,10 +36,10 @@ resource "aws_lb_listener" "http_redirect" {
   protocol          = "HTTP"
 
   default_action {
-    type            = "redirect"
+    type = "redirect"
     redirect {
-      port = "443"
-      protocol = "HTTPS"
+      port        = "443"
+      protocol    = "HTTPS"
       status_code = "HTTP_301"
     }
   }

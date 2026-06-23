@@ -39,9 +39,9 @@ variable "domain_name" {
 }
 
 #ECS
-variable "application-image-uri" {
+variable "ecr_registry_url" {
   type        = string
-  description = "URL of image hosted in ECR"
+  description = "ECR Registry URL"
 }
 
 #PORTS

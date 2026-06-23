@@ -3,9 +3,9 @@ resource "aws_ecs_cluster" "memos-ecs-cluster" {
 }
 
 resource "aws_ecs_task_definition" "memos-task-definition" {
-  family                   = "memos-task-definition"
-  execution_role_arn       = var.ecs_execution_role_arn
-  
+  family             = "memos-task-definition"
+  execution_role_arn = var.ecs_execution_role_arn
+
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 1024
@@ -14,7 +14,7 @@ resource "aws_ecs_task_definition" "memos-task-definition" {
   [
     {
         "name" : "memos-container-definition",
-        "image": "${var.application-image-uri}",
+        "image": "${var.ecr_registry_url}/memos-ecs:latest",
         "cpu" : 1024,
         "memory" : 2048,
         "essential" : true,
@@ -28,10 +28,10 @@ resource "aws_ecs_task_definition" "memos-task-definition" {
   ]
 TASK_DEFINITION
 
- runtime_platform {
+  runtime_platform {
     operating_system_family = "LINUX"
     cpu_architecture        = "X86_64"
- }
+  }
 }
 
 resource "aws_ecs_service" "memos-ecs-service" {
@@ -39,11 +39,11 @@ resource "aws_ecs_service" "memos-ecs-service" {
   cluster         = aws_ecs_cluster.memos-ecs-cluster.id
   task_definition = aws_ecs_task_definition.memos-task-definition.arn
   desired_count   = 2
-  launch_type = "FARGATE"
+  launch_type     = "FARGATE"
 
   network_configuration {
-    subnets = var.private_subnets
-    security_groups = [var.memos_ecs_tasks_sg]
+    subnets          = var.private_subnets
+    security_groups  = [var.memos_ecs_tasks_sg]
     assign_public_ip = false
   }
 
