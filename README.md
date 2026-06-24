@@ -4,13 +4,13 @@ This project delivers a production-grade, end-to-end deployment of a privacy-foc
 
 ## Overview
 
-Containerisation: Multi-stage builds using `scratch` base image to reduce image size to ~30MB
-Infrastructure as Code (IaC): Terraform manages all infrastructure, fully automated
-Compute: AWS ECS Fargate
-Networking: Custom VPC, Private/Public Subnets Alongside NAT Gateways, Routes, Security Groups, Load Balancing
-TLS/DNS: SSL Certifcation configured via ACM, DNS (Cloudflare)
-CI/CD: Builds Image, pushes to ECR and updates ECS, Automated Unit Tests, Automated IaC deployment.
-Registry: Docker image hosted in AWS ECR
+* **Containerisation:** Multi-stage builds using `scratch` base image to reduce image size to ~30MB
+* **Infrastructure as Code (IaC):** Terraform manages all infrastructure, fully automated
+* **Compute:** AWS ECS Fargate
+* **Networking:** Custom VPC, Private/Public Subnets Alongside NAT Gateways, Routes, Security Groups, Load Balancing
+* **TLS/DNS:** SSL Certification configured via ACM, DNS (Cloudflare)
+* **CI/CD:** Builds Image, pushes to ECR and updates ECS, Automated Unit Tests, Automated IaC deployment.
+* **Registry:** Docker image hosted in AWS ECR
 
 ## Demo
 
