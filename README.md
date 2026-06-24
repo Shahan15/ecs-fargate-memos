@@ -76,18 +76,18 @@ memos-infra/
 docker build -t memos . #To build image
 ```
 
-![Docker Build Command](assets/docker_Build_LocalSetup.png)
+![Docker Build Command](.github/assets/docker_Run_LocalSetup.png)
 
 ```
 docker run -p 8081:8081 memos #Start the Container
 ```
 
-![Docker Run Command](assets/docker_Run_LocalSetup.png)
+![Docker Run Command](.github/assets/docker_Run_LocalSetup.png)
 
 You can run a health check via:
 `curl http://localhost:8081/healthCheck`
 
-![Health Check](assets/health_check.png)
+![Health Check](.github/assets/health_check.png)
 
 Open `http://localhost:8081` and start writing!
 
