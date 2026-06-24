@@ -14,12 +14,13 @@ This project delivers a production-grade, end-to-end deployment of a privacy-foc
 
 ## Demo
 
-<video src="./assets/demo.mp4" width="750" controls></video>
+[Click here to watch the infrastructure deployment demo](https://drive.google.com/file/d/1MfFLgSu470Aa1DoLCksazil4ajLOXQqf/view?usp=sharing)
 
+> **Note:** The video demonstrates the full AWS ECS Fargate infrastructure deployment process and application functionality.
 
 ## Architecture
 
-![Architecture Diagram](<assets/Architecture Diagram.png>)
+![Architecture Diagram](<.github/assets/architecture_Diagram.png>)
 
 **Traffic flow:**
 
