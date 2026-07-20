@@ -49,6 +49,8 @@ memos-infra/
 ├── app/                    # Memos application source/config
 ├── infra/                  # Terraform infrastructure code
 │   ├── modules/            # Reusable resource modules
+|   |   ├── acm/            # Automatically updates CloudFlare DNS Records for ACM validation - CNAME
+|   |   ├── dns/            # Autoamtically updates Cloudflare DNS with necessary NS Records
 │   │   ├── alb/            # Load Balancer configuration
 │   │   ├── ecs/            # Fargate task and service definitions
 │   │   ├── iam/            # IAM roles and execution policies
