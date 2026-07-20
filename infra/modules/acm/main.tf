@@ -8,7 +8,7 @@ resource "aws_acm_certificate" "memos-acm-cert" {
 }
 
 
-# Automatically Updates CloudFlare DNS Records for ACM validation
+# Automatically Updates CloudFlare DNS Records for ACM validation - CNAME Record
 resource "cloudflare_dns_record" "acm_validation" {
   for_each = {
     for dvo in aws_acm_certificate.memos-acm-cert.domain_validation_options : dvo.domain_name => {

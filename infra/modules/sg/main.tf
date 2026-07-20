@@ -4,10 +4,10 @@ resource "aws_security_group" "memos-sg" {
   vpc_id      = var.vpc_id_sg
 
   ingress {
-    from_port        = 80
-    to_port          = 80
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"] 
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
@@ -18,10 +18,10 @@ resource "aws_security_group" "memos-sg" {
   }
 
   egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
@@ -32,12 +32,12 @@ resource "aws_security_group" "memos_ecs_tasks_sg" {
   vpc_id      = var.vpc_id_sg
 
   ingress {
-    from_port       = 8081 
-    to_port         = 8081
-    protocol        = "tcp"
-    
+    from_port = 8081
+    to_port   = 8081
+    protocol  = "tcp"
+
     #only allows traffic from ALB
-    security_groups = [aws_security_group.memos-sg.id] 
+    security_groups = [aws_security_group.memos-sg.id]
   }
 
   egress {

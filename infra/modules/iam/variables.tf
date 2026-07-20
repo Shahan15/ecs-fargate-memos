@@ -6,7 +6,7 @@ variable "repository" {
 }
 
 variable "organistaion_name" {
-  type = string
+  type        = string
   description = "Github username or organisation owning target repo"
-  default = "Shahan15"
+  default     = "Shahan15"
 }

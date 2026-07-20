@@ -15,14 +15,14 @@ resource "aws_lb_target_group" "ecs-service-tg" {
 
   health_check {
     enabled             = true
-    path                = "/"     
-    port                = "8081" 
+    path                = "/"
+    port                = "8081"
     protocol            = "HTTP"
-    matcher             = "200-399" 
-    interval            = 30       
-    timeout             = 5         
-    healthy_threshold   = 2        
-    unhealthy_threshold = 3         
+    matcher             = "200-399"
+    interval            = 30
+    timeout             = 5
+    healthy_threshold   = 2
+    unhealthy_threshold = 3
   }
 }
 

@@ -5,8 +5,8 @@ resource "aws_vpc" "memos-vpc" {
 
 ##PRIVATE SUBNETS
 resource "aws_subnet" "memos-private-subnet-A" {
-  vpc_id     = aws_vpc.memos-vpc.id
-  cidr_block = var.private_subnet_A_CIDR
+  vpc_id            = aws_vpc.memos-vpc.id
+  cidr_block        = var.private_subnet_A_CIDR
   availability_zone = "${var.vpc_region}a"
 
   tags = {
@@ -17,11 +17,11 @@ resource "aws_subnet" "memos-private-subnet-A" {
 
 
 resource "aws_subnet" "memos-private-subnet-B" {
-  vpc_id     = aws_vpc.memos-vpc.id
-  cidr_block = var.private_subnet_B_CIDR
+  vpc_id            = aws_vpc.memos-vpc.id
+  cidr_block        = var.private_subnet_B_CIDR
   availability_zone = "${var.vpc_region}b"
 
-   tags = {
+  tags = {
     Name = "Private_SubnetB"
   }
   map_public_ip_on_launch = false
@@ -30,8 +30,8 @@ resource "aws_subnet" "memos-private-subnet-B" {
 
 #PUBLIC SUBNETS
 resource "aws_subnet" "memos-public-subnet-A" {
-  vpc_id     = aws_vpc.memos-vpc.id
-  cidr_block = var.public_subnet_A_CIDR
+  vpc_id            = aws_vpc.memos-vpc.id
+  cidr_block        = var.public_subnet_A_CIDR
   availability_zone = "${var.vpc_region}a"
 
 
@@ -42,8 +42,8 @@ resource "aws_subnet" "memos-public-subnet-A" {
 }
 
 resource "aws_subnet" "memos-public-subnet-B" {
-  vpc_id     = aws_vpc.memos-vpc.id
-  cidr_block = var.public_subnet_B_CIDR
+  vpc_id            = aws_vpc.memos-vpc.id
+  cidr_block        = var.public_subnet_B_CIDR
   availability_zone = "${var.vpc_region}b"
 
   tags = {
@@ -65,28 +65,28 @@ resource "aws_internet_gateway" "memos-internet_gateway" {
 
 #Static IP
 resource "aws_eip" "IP_FOR_Nat_A" {
-  domain   = "vpc"
-   tags = {
+  domain = "vpc"
+  tags = {
     Name = "EIP_A"
   }
 
-  depends_on = [ aws_internet_gateway.memos-internet_gateway ]
+  depends_on = [aws_internet_gateway.memos-internet_gateway]
 
 }
 
 resource "aws_eip" "IP_FOR_Nat_B" {
-  domain   = "vpc"
-   tags = {
+  domain = "vpc"
+  tags = {
     Name = "EIP_B"
   }
-  depends_on = [ aws_internet_gateway.memos-internet_gateway ]
+  depends_on = [aws_internet_gateway.memos-internet_gateway]
 }
 
 
 #NAT GATEWAY
 resource "aws_nat_gateway" "nat_A" {
   allocation_id = aws_eip.IP_FOR_Nat_A.id
-  subnet_id = aws_subnet.memos-public-subnet-A.id
+  subnet_id     = aws_subnet.memos-public-subnet-A.id
   tags = {
     Name = "NAT_G-A"
   }
@@ -94,7 +94,7 @@ resource "aws_nat_gateway" "nat_A" {
 
 resource "aws_nat_gateway" "nat_B" {
   allocation_id = aws_eip.IP_FOR_Nat_B.id
-  subnet_id = aws_subnet.memos-public-subnet-B.id
+  subnet_id     = aws_subnet.memos-public-subnet-B.id
   tags = {
     Name = "NAT_G-B"
   }
@@ -122,7 +122,7 @@ resource "aws_route_table" "private_route" {
   vpc_id = aws_vpc.memos-vpc.id
 
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.nat_A.id
   }
 
