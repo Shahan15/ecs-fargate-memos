@@ -1,30 +1,25 @@
-data "aws_acm_certificate" "memos-acm" {
-  domain   = var.domain_name
-  statuses = ["ISSUED"]
-}
-
 module "vpc" {
-  source = "./modules/vpc"
-  vpc_region = var.vpc_region
-  VPC_CIDR = var.VPC_CIDR
+  source                = "./modules/vpc"
+  vpc_region            = var.vpc_region
+  VPC_CIDR              = var.VPC_CIDR
   private_subnet_A_CIDR = var.private_subnet_A_CIDR
   private_subnet_B_CIDR = var.private_subnet_B_CIDR
-  public_subnet_A_CIDR = var.public_subnet_A_CIDR
-  public_subnet_B_CIDR = var.public_subnet_B_CIDR
+  public_subnet_A_CIDR  = var.public_subnet_A_CIDR
+  public_subnet_B_CIDR  = var.public_subnet_B_CIDR
 }
 
 module "alb" {
-    source = "./modules/alb"
-    security_group_id = module.security_group.sg_id
-    public_subnets_id = module.vpc.public_subnets_id
-    acm-arn = data.aws_acm_certificate.memos-acm.arn
-    ecs-cluster-arn = module.ecs.memos-ecs-cluster
-    vpc_id = module.vpc.vpc_id
+  source            = "./modules/alb"
+  security_group_id = module.security_group.sg_id
+  public_subnets_id = module.vpc.public_subnets_id
+  acm-arn           = module.acm.acm-cert-arn
+  ecs-cluster-arn   = module.ecs.memos-ecs-cluster
+  vpc_id            = module.vpc.vpc_id
 }
 
 module "security_group" {
-    source = "./modules/sg"
-    vpc_id_sg = module.vpc.vpc_id
+  source    = "./modules/sg"
+  vpc_id_sg = module.vpc.vpc_id
 }
 
 module "iam" {
@@ -32,18 +27,36 @@ module "iam" {
 }
 
 module "ecs" {
-  source = "./modules/ecs"
-  ecr_registry_url = var.ecr_registry_url
-  target_group_arn = module.alb.target_group_arn
-  memos_ecs_tasks_sg = module.security_group.memos_ecs_tasks_sg_id
-  private_subnets = module.vpc.private_subnets_id
-  container_port = var.container_port
-  host_port = var.host_port
+  source                 = "./modules/ecs"
+  ecr_registry_url       = var.ecr_registry_url
+  target_group_arn       = module.alb.target_group_arn
+  memos_ecs_tasks_sg     = module.security_group.memos_ecs_tasks_sg_id
+  private_subnets        = module.vpc.private_subnets_id
+  container_port         = var.container_port
+  host_port              = var.host_port
   ecs_execution_role_arn = module.iam.execution_role_arn
 }
 
 module "route53" {
-  source = "./modules/route53"
-  alb_zone_id = module.alb.alb_zone_id
+  source       = "./modules/route53"
+  alb_zone_id  = module.alb.alb_zone_id
   alb_dns_name = module.alb.alb_dns_name
+}
+
+module "acm" {
+  source             = "./modules/acm"
+  domain_name        = var.domain_name
+  cloudflare_zone_id = var.cloudflare_zone_id
+}
+
+module "dns" {
+  source             = "./modules/dns"
+  cloudflare_zone_id = var.cloudflare_zone_id
+  sub_domain         = var.sub_domain
+  name_servers_map = {
+    "ns0" = module.route53.hosted_zone_ns[0]
+    "ns1" = module.route53.hosted_zone_ns[1]
+    "ns2" = module.route53.hosted_zone_ns[2]
+    "ns3" = module.route53.hosted_zone_ns[3]
+  }
 }

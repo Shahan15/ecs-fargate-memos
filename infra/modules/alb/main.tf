@@ -6,8 +6,8 @@ resource "aws_lb" "memos_ALB" {
   subnets            = var.public_subnets_id
 }
 
-resource "aws_lb_target_group" "ecs-cluster-tg" {
-  name        = "ecs-cluster-tg"
+resource "aws_lb_target_group" "ecs-service-tg" {
+  name        = "ecs-service-tg"
   port        = 8081
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
@@ -54,6 +54,6 @@ resource "aws_lb_listener" "back_end" {
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.ecs-cluster-tg.arn
+    target_group_arn = aws_lb_target_group.ecs-service-tg.arn
   }
 }

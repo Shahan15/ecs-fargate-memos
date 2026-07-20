@@ -8,6 +8,10 @@ terraform {
       source  = "integrations/github"
       version = "~> 6.0"
     }
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "~> 5"
+    }
   }
 
   backend "s3" {
@@ -21,4 +25,8 @@ terraform {
 
 provider "aws" {
   region = "eu-west-1"
+}
+
+provider "cloudflare" {
+  api_token = var.cloudflare_api_token
 }
